@@ -16,8 +16,15 @@ export class Input {
     });
     canvas.addEventListener('mousedown', (event) => {
       if (event.button === 0) {
+        // Read the position from this event, not the last mousemove: a click
+        // with no prior mouse movement must still land where it was made.
+        const rect = canvas.getBoundingClientRect();
+        const x = (event.clientX - rect.left) * (canvas.width / rect.width);
+        const y = (event.clientY - rect.top) * (canvas.height / rect.height);
+        this.mouseX = x;
+        this.mouseY = y;
         this.mouseDown = true;
-        this.queuedClicks.push({ x: this.mouseX, y: this.mouseY });
+        this.queuedClicks.push({ x, y });
       }
     });
     window.addEventListener('mouseup', (event) => {
